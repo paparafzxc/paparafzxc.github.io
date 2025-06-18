@@ -6,7 +6,9 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy": "npm run build && gh-pages -d out",
+    "homepage": "https://paparafzxc.github.io"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.4",
@@ -24,6 +26,7 @@
     "autoprefixer": "^10.4.21",
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
+    "gh-pages": "^6.3.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.10",
     "typescript": "^5"

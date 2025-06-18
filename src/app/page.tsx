@@ -44,7 +44,7 @@ const generatePushupScoreEntries = (
   score = middleScore - 1;
   let rep = middleRep - 1;
 
-  while (rep >= bottomRep) {
+  while (rep >= bottomRep && score >= bottomScore) {
     if (rep - 1 >= bottomRep) {
       entries.push({ min: rep - 1, max: rep, score });
       rep -= 2;
@@ -242,7 +242,6 @@ export default function Home() {
     if (situps > maxSitup) setSitups(maxSitup);
   }, [runSecondsTotal, age, gender, pushups, situps]);
 
-
   return (
     <main
       className="min-h-screen text-white p-4 flex flex-col items-center justify-center gap-6 bg-cover bg-center font-sans"
@@ -384,7 +383,7 @@ export default function Home() {
               </p>
               <p className="pt-2 flex justify-between">
                 <span className="font-semibold">Run:</span>
-                <span className={scores.run < 70 ? "text-red-500 font-bold" : ""}>
+                 <span className={scores.situps < 70 ? "text-red-500 font-bold" : ""}>
                   {scores.run}%
                 </span>
               </p>

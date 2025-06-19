@@ -155,6 +155,9 @@ export default function Home() {
   const [pushups, setPushups] = useState(0);
   const [scores, setScores] = useState({ run: 0, pushups: 0, situps: 0 });
   const [situps, setSitups] = useState(0);
+  const [weight, setWeight] = useState<number>(0);
+  const [height, setHeight] = useState<number>(0);
+  const bmi = height > 0 ? weight / ((height / 100) ** 2) : 0;
 
   const getAgeBracket = (age: number): string => {
     if (age >= 21 && age <= 25) return "21-25";
@@ -262,23 +265,35 @@ export default function Home() {
         {/* Sliders section */}
         <div className="flex-1 grid gap-4">
           {/* Gender Switch */}
-          <div className="p-5 border-b border-white/30 flex items-center justify-between animate-fade-in">
-            <span className="text-lg font-semibold text-white">Gender: {gender}</span>
-            <Switch
-              checked={gender === "Male"}
-              onChange={(val) => setGender(val ? "Male" : "Female")}
-              className={`relative inline-flex h-10 w-28 items-center rounded-full transition-colors
-      ${gender === "Male"
-                  ? "bg-gradient-to-r from-blue-500 to-green-500"
-                  : "bg-gradient-to-r from-pink-500 to-purple-500"
-                }`}
-            >
-              <span className="sr-only">Toggle Gender</span>
-              <span
-                className={`inline-block h-8 w-8 transform bg-white rounded-full transition-transform
-        ${gender === "Male" ? "translate-x-19" : "translate-x-1"}`}
+          <div className="p-5 border-b border-white/30 animate-fade-in">
+            <div className="flex items-center gap-4">
+              <img
+                src="/gender.png" // Replace with your actual icon path
+                alt="Gender"
+                className="w-12 h-12 object-contain"
               />
-            </Switch>
+              <div className="flex-1 flex items-center justify-between">
+                <div className="text-lg font-semibold text-white flex flex-col">
+                  <span>Gender:</span>
+                  <span className="text-yellow-300 text-2xl">{gender}</span>
+                </div>
+                <Switch
+                  checked={gender === "Male"}
+                  onChange={(val) => setGender(val ? "Male" : "Female")}
+                  className={`relative inline-flex h-10 w-28 items-center rounded-full transition-colors
+          ${gender === "Male"
+                      ? "bg-gradient-to-r from-blue-500 to-green-500"
+                      : "bg-gradient-to-r from-pink-500 to-purple-500"
+                    }`}
+                >
+                  <span className="sr-only">Toggle Gender</span>
+                  <span
+                    className={`inline-block h-8 w-8 transform bg-white rounded-full transition-transform
+            ${gender === "Male" ? "translate-x-19" : "translate-x-1"}`}
+                  />
+                </Switch>
+              </div>
+            </div>
           </div>
 
           {/* Age Slider */}
@@ -366,7 +381,7 @@ export default function Home() {
         {/* Score Card + Downloads Container */}
         <div className="flex flex-col items-center space-y-4 w-full md:w-[300px]">
           {/* Score Card */}
-          <div className="bg-white p-6 rounded-2xl shadow-md w-full animate-fade-in text-gray-900">
+          <div className="bg-white p-6 rounded-lg shadow-md w-full animate-fade-in text-gray-900">
             <h2 className="text-2xl font-bold mb-4 text-gray-900">Scores</h2>
             <div className="space-y-2 divide-y divide-gray-300 text-lg font-medium">
               <p className="pt-2 flex justify-between">
@@ -383,7 +398,7 @@ export default function Home() {
               </p>
               <p className="pt-2 flex justify-between">
                 <span className="font-semibold">Run:</span>
-                 <span className={scores.situps < 70 ? "text-red-500 font-bold" : ""}>
+                <span className={scores.run < 70 ? "text-red-500 font-bold" : ""}>
                   {scores.run}%
                 </span>
               </p>
@@ -398,24 +413,66 @@ export default function Home() {
 
           {/* Downloadable References */}
           <div className="text-center space-y-1 text-sm font-normal w-full animate-fade-in">
-            <p className="text-white font-medium">Download Reference Files:</p>
+            {/* BMI Calculator */}
+            <div className="mt-1 bg-black/20 p-4 rounded-lg text-left text-white">
+              <p className="text-base font-semibold mb-2">BMI Calculator</p>
+              <div className="space-y-2 text-left">
+                <div>
+                  <label className="block text-sm font-medium text-white mb-1">Weight (kg)</label>
+                  <input
+                    type="number"
+                    placeholder="e.g. 65"
+                    className="w-full px-3 py-2 border-b border-white/30 text-white placeholder:text-gray-400 focus:outline-none focus:ring-0"
+                    value={weight || ''}
+                    onChange={(e) => setWeight(parseFloat(e.target.value) || 0)}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-white mb-1">Height (cm)</label>
+                  <input
+                    type="number"
+                    placeholder="e.g. 170"
+                    className="w-full px-3 py-2 border-b border-white/30 text-white placeholder:text-gray-400 focus:outline-none focus:ring-0"
+                    value={height || ''}
+                    onChange={(e) => setHeight(parseFloat(e.target.value) || 0)}
+                  />
+                </div>
+                <p className="text-sm">
+                  BMI:{" "}
+                  <span className="font-bold">
+                    {height > 0 ? (weight / ((height / 100) ** 2)).toFixed(2) : "--"}
+                  </span>
+                </p>
+                <p className="text-xs italic text-gray-300">
+                  {bmi < 18.5
+                    ? "Underweight"
+                    : bmi < 24.9
+                      ? "Normal weight"
+                      : bmi < 29.9
+                        ? "Overweight"
+                        : "Obese"}
+                </p>
+              </div>
+            </div>
+            <p className="text-white font-medium text-left">Download Reference Files:</p>
             <a
               href="/runmatrix.pdf"
-              className="text-yellow-300 hover:underline block"
+              className="text-yellow-300 text-left hover:underline block"
               download
             >
               📄 3.2km Run Scoring Matrix (PDF)
             </a>
             <a
               href="/situpmatrix.jpg"
-              className="text-yellow-300 hover:underline block"
+              className="text-yellow-300 text-left hover:underline block"
               download
             >
               📄 Sit-Up Scoring Matrix (JPG)
             </a>
             <a
               href="/pushupmatrix.jpg"
-              className="text-yellow-300 hover:underline block"
+              className="text-yellow-300 text-left hover:underline block"
               download
             >
               📄 Push-Up Scoring Matrix (JPG)
@@ -428,7 +485,6 @@ export default function Home() {
   );
 }
 
-// 🔧 Reusable slider input
 function SliderInput({
   label,
   value,
@@ -452,64 +508,81 @@ function SliderInput({
     lg: "text-lg",
   };
 
+  const isRunTime = label.toLowerCase().includes("run time");
+
+  const formatRunTime = (totalSeconds: number) => {
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  };
+
   return (
-    <div>
+    <div className="w-full">
       <label className={`font-semibold text-white ${sizeClasses[size]}`}>
         {label}
       </label>
-      <input
-        type="range"
-        min={min}
-        max={max}
-        value={value}
-        onChange={(e) => onChange(parseInt(e.target.value))}
-        className="w-full h-4 rounded-lg appearance-none"
-        style={{
-          background: `linear-gradient(to right, rgb(236, 182, 4) 0%, rgb(122, 201, 20) ${(100 * (value - min)) / (max - min)}%, #d1d5db ${(100 * (value - min)) / (max - min)}%, #d1d5db 100%)`,
-        }}
-      />
+
+      <div className="flex items-center gap-4">
+        <div className="w-full relative">
+          <input
+            type="range"
+            min={min}
+            max={max}
+            value={value}
+            onChange={(e) => onChange(parseInt(e.target.value))}
+            className="w-full h-4 rounded-lg appearance-none"
+            style={{
+              background: `linear-gradient(to right, rgb(236, 182, 4) 0%, rgb(122, 201, 20) ${(100 * (value - min)) / (max - min)}%, #d1d5db ${(100 * (value - min)) / (max - min)}%, #d1d5db 100%)`,
+            }}
+          />
+
+          {!hideRangeLabels && (
+            <div className="absolute flex justify-between w-full text-xs text-white mt-1">
+              <span>{min}</span>
+              <span>{max}</span>
+            </div>
+          )}
+        </div>
+
+        <div className="text-2xl font-bold text-yellow-400 w-20 text-right">
+          {isRunTime ? formatRunTime(value) : value}
+        </div>
+      </div>
 
       <style jsx>{`
-    input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      height: 20px;
-      width: 40px;
-      border-radius: 9999px;
-      background-color:rgb(8, 53, 39);
-      cursor: pointer;
-      margin-top: -6px; /* 👈 perfectly centers on 8px track */
-      border: 2px solid white;
-    }
+        input[type="range"]::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          height: 20px;
+          width: 40px;
+          border-radius: 9999px;
+          background-color: rgb(8, 53, 39);
+          cursor: pointer;
+          margin-top: -6px;
+          border: 2px solid white;
+        }
 
-    input[type="range"]::-moz-range-thumb {
-      height: 20px;
-      width: 40px;
-      border-radius: 9999px;
-      background-color: rgb(8, 53, 39);
-      cursor: pointer;
-      border: 2px solid white;
-    }
+        input[type="range"]::-moz-range-thumb {
+          height: 20px;
+          width: 40px;
+          border-radius: 9999px;
+          background-color: rgb(8, 53, 39);
+          cursor: pointer;
+          border: 2px solid white;
+        }
 
-    input[type="range"]::-webkit-slider-runnable-track {
-      height: 8px;
-      border-radius: 9999px;
-      background: transparent;
-    }
+        input[type="range"]::-webkit-slider-runnable-track {
+          height: 8px;
+          border-radius: 9999px;
+          background: transparent;
+        }
 
-    input[type="range"]::-moz-range-track {
-      height: 8px;
-      border-radius: 9999px;
-      background: transparent;
-    }
-  `}</style>
-
-      {!hideRangeLabels && (
-        <div className="text-xs text-white flex justify-between">
-          <span>{min}</span>
-          <span>{max}</span>
-        </div>
-      )}
+        input[type="range"]::-moz-range-track {
+          height: 8px;
+          border-radius: 9999px;
+          background: transparent;
+        }
+      `}</style>
     </div>
   );
 }

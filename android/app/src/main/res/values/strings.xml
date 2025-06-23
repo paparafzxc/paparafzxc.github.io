@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">PFT Score Calculator</string>
+    <string name="title_activity_main">pft-score-calculator</string>
+    <string name="package_name">com.pftscorecalculator.app</string>
+    <string name="custom_url_scheme">com.pftscorecalculator.app</string>
+</resources>

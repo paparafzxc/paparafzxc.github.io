@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: "export", // Enables static export to /out for use with Capacitor or static hosting
 };
 
 export default nextConfig;
